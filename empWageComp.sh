@@ -24,19 +24,43 @@ function getWorkHrs() {
         esac
 }
 
+function day() {
+	case $1 in
+		$IS_FULL_TIME)
+                        echo "fullday"
+                        ;;
+                $IS_PART_TIME)
+                        echo "halfday"
+                        ;;
+                *)
+                        echo "absent"
+                        ;;
+        esac
+}
+
+
 function getEmpWage () {
         echo $(($1*$EMP_RATE_PER_HR))
 }
 
 while [[  $totalEmpHr -lt $MAX_HRS_IN_MONTH && $totalWorkingDays -lt $NUM_WORKING_DAYS ]]
 do
+	abc=$((RANDOM%3))
         ((totalWorkingDays++))
-        getWorkHrs $((RANDOM%3))
+        getWorkHrs $abc
         totalEmpHr=$(($totalEmpHr + $empHrs))
         dailyWages[$totalWorkingDays]=$(($empHrs*$EMP_RATE_PER_HR))
+	days[$totalWorkingDays]="$( day $abc )"
 done
 
 totalSalary="$( getEmpWage $totalEmpHr )"
 
 
-echo "total salary = ------------>" $totalSalary
+echo "daily wages ------> " ${dailyWages[@]}
+echo "working days are as follows ----> " ${days[@]}
+
+echo "total salary = -----> " $totalSalary
+
+
+
+
