@@ -7,42 +7,36 @@ MAX_HRS_IN_MONTH=100;
 EMP_RATE_PER_HR=20;
 NUM_WORKING_DAYS=20;
 
-totalWorkHours=0;
+totalEmpHr=0;
 totalWorkingDays=0;
 
-function getWorkingHours() {
+function getWorkHrs() {
         case $1 in
                 $IS_FULL_TIME)
-                        workHours=8
+                        empHrs=8
                         ;;
                 $IS_PART_TIME)
-                        workHours=4
+                        empHrs=4
                         ;;
                 *)
-                        workHours=0
+                        empHrs=0
                         ;;
         esac
 }
-while [[ $totalWorkHours -lt $MAX_HRS_IN_MONTH && $totalWorkingDays -lt $NUM_WORKING_DAYS ]]
+
+function getEmpWage () {
+        echo $(($1*$EMP_RATE_PER_HR))
+}
+
+while [[  $totalEmpHr -lt $MAX_HRS_IN_MONTH && $totalWorkingDays -lt $NUM_WORKING_DAYS ]]
 do
         ((totalWorkingDays++))
-        getWorkingHours $((RANDOM%3))
-        totalWorkHours=$(($totalWorkHours + $workHours));
+        getWorkHrs $((RANDOM%3))
+        totalEmpHr=$(($totalEmpHr + $empHrs))
+        dailyWages[$totalWorkingDays]=$(($empHrs*$EMP_RATE_PER_HR))
 done
 
-totalSalary=$(($totalWorkHours*$EMP_RATE_PER_HR));
+totalSalary="$( getEmpWage $totalEmpHr )"
+
 
 echo "total salary = ------------>" $totalSalary
-#---------------------------------------------------------------------------------------------------------------------
-#function myFunction() {
-#        echo $1
-#}
-
-#result="$( myFunction $((RANDOM%2)) )"
-
-#if [ $result -eq 1 ]
-#then
-#        echo "success"
-#else
-#        echo "failure"
-#i
